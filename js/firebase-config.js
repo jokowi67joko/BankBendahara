@@ -13,8 +13,11 @@ const firebaseConfig = {
   appId: "1:87938401504:web:9da3e9ca0eaff16ad27c85"
 };
 
-// Inisialisasi Firebase & Firestore
+// Inisialisasi Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-const db = firebase.firestore();
+
+// Daftarkan 'db' ke objek global window agar dikenali oleh auth.js
+window.db = firebase.firestore();
+var db = window.db;
