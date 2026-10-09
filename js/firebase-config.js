@@ -1,59 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
-  const accessKeyInput = document.getElementById('accessKey');
-  const btnSubmit = document.getElementById('btnSubmit');
+const firebaseConfig = {
+  apiKey: "AIzaSyBJA-HpHbU3-egRvAdcYdzTB_Bf9-mnjA",
+  authDomain: "bankbendahara.firebaseapp.com",
+  projectId: "bankbendahara",
+  storageBucket: "bankbendahara.firebasestorage.app",
+  messagingSenderId: "87938401504",
+  appId: "1:87938401504:web:9da3e9ca0eaff16ad27c85"
+};
 
-  if (!loginForm) return;
+// Inisialisasi Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const inputKey = accessKeyInput.value.trim();
-    if (!inputKey) return;
-
-    btnSubmit.disabled = true;
-    btnSubmit.innerText = "Memverifikasi...";
-
-    try {
-      const apiKey = "AIzaSyBJA-HpHbU3-egRvAdcYdzTB_Bf9-mnjA";
-      const projectId = "bankbendahara";
-      const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/akses/admin?key=${apiKey}`;
-      
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`Gagal menghubungi server (${response.status})`);
-      }
-
-      const doc = await response.json();
-      const fields = doc.fields || {};
-      const savedPassword = fields.password ? (fields.password.stringValue || "") : "";
-      const role = fields.role ? (fields.role.stringValue || "user") : "user";
-
-      if (savedPassword === inputKey) {
-        sessionStorage.setItem('isLoggedIn', 'true');
-        sessionStorage.setItem('userRole', role);
-        sessionStorage.setItem('userId', 'admin');
-
-        if (role === 'admin') {
-          window.location.href = 'admin.html';
-        } else {
-          window.location.href = 'dashboard.html';
-        }
-      } else {
-        alert("Access Key salah! Periksa kembali key kamu.");
-        resetButton();
-      }
-
-    } catch (error) {
-      console.error(error);
-      alert("Error login: " + error.message);
-      resetButton();
-    }
-  });
-
-  function resetButton() {
-    btnSubmit.disabled = false;
-    btnSubmit.innerText = "Masuk Sekarang";
-  }
+// Inisialisasi Firestore dengan force long-polling agar tidak terputus di jaringan seluler/browser HP
+const firestoreDb = firebase.firestore();
+firestoreDb.settings({
+  experimentalForceOwningTab: true,
+  experimentalLongPolling: true,
+  merge: true
 });
+
+window.db = firestoreDb;
+var db = window.db;
