@@ -1,71 +1,39 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
-  const accessKeyInput = document.getElementById('accessKey');
-  const errorMessage = document.getElementById('errorMessage');
-  const btnSubmit = document.getElementById('btnSubmit');
-
-  if (!loginForm) return;
-
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const inputKey = accessKeyInput.value.trim();
-    if (!inputKey) return;
-
-    btnSubmit.disabled = true;
-    btnSubmit.innerText = "Memverifikasi...";
-    if (errorMessage) errorMessage.style.display = "none";
-
     try {
-      // 1. Coba cek langsung dokumen 'admin' di koleksi 'akses'
-      const adminDoc = await db.collection('akses').doc('admin').get();
+      const apiKey = "AIzaSyBJA-HpHbU3-egRvAdcYdzTB_Bf9-mnjA";
+      const projectId = "bankbendahara";
+      const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/akses/admin?key=${apiKey}`;
       
-      let matchedData = null;
-
-      if (adminDoc.exists && adminDoc.data().password === inputKey) {
-        matchedData = adminDoc.data();
-        matchedData.id = adminDoc.id;
-      } else {
-        // 2. Jika bukan admin, cari di seluruh dokumen dalam koleksi 'akses'
-        const snapshot = await db.collection('akses')
-          .where('password', '==', inputKey)
-          .get();
-
-        if (!snapshot.empty) {
-          snapshot.forEach(doc => {
-            matchedData = doc.data();
-            matchedData.id = doc.id;
-          });
-        }
-      }
-
-      if (!matchedData) {
-        alert("Access Key salah! Periksa kembali key kamu.");
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        const errDetail = await response.json();
+        alert("Pesan error Google: " + (errDetail.error?.message || response.statusText));
         resetButton();
         return;
       }
 
-      // Simpan session
-      sessionStorage.setItem('isLoggedIn', 'true');
-      sessionStorage.setItem('userRole', matchedData.role || 'user');
-      sessionStorage.setItem('userId', matchedData.id);
+      const doc = await response.json();
+      const fields = doc.fields || {};
+      const savedPassword = fields.password ? (fields.password.stringValue || "") : "";
+      const role = fields.role ? (fields.role.stringValue || "user") : "user";
 
-      // Pengalihan halaman
-      if (matchedData.role === 'admin') {
-        window.location.href = 'admin.html';
+      if (savedPassword === inputKey) {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userRole', role);
+        sessionStorage.setItem('userId', 'admin');
+
+        if (role === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'dashboard.html';
+        }
       } else {
-        window.location.href = 'dashboard.html';
+        alert("Access Key salah! Periksa kembali key kamu.");
+        resetButton();
       }
 
     } catch (error) {
       console.error(error);
-      alert("Error database: " + error.message);
+      alert("Error script: " + error.message);
       resetButton();
     }
-  });
-
-  function resetButton() {
-    btnSubmit.disabled = false;
-    btnSubmit.innerText = "Masuk Sekarang";
-  }
-});
