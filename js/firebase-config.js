@@ -12,6 +12,13 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-// Pastikan db masuk ke window global
-window.db = firebase.firestore();
+// Inisialisasi Firestore dengan force long-polling agar tidak terputus di jaringan seluler/browser HP
+const firestoreDb = firebase.firestore();
+firestoreDb.settings({
+  experimentalForceOwningTab: true,
+  experimentalLongPolling: true,
+  merge: true
+});
+
+window.db = firestoreDb;
 var db = window.db;
