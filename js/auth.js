@@ -17,30 +17,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (errorMessage) errorMessage.style.display = "none";
 
     try {
-      // Cek dokumen di koleksi 'akses'
-      const snapshot = await db.collection('akses')
-        .where('password', '==', inputKey)
-        .get();
+      // 1. Coba cek langsung dokumen 'admin' di koleksi 'akses'
+      const adminDoc = await db.collection('akses').doc('admin').get();
+      
+      let matchedData = null;
 
-      if (snapshot.empty) {
+      if (adminDoc.exists && adminDoc.data().password === inputKey) {
+        matchedData = adminDoc.data();
+        matchedData.id = adminDoc.id;
+      } else {
+        // 2. Jika bukan admin, cari di seluruh dokumen dalam koleksi 'akses'
+        const snapshot = await db.collection('akses')
+          .where('password', '==', inputKey)
+          .get();
+
+        if (!snapshot.empty) {
+          snapshot.forEach(doc => {
+            matchedData = doc.data();
+            matchedData.id = doc.id;
+          });
+        }
+      }
+
+      if (!matchedData) {
         alert("Access Key salah! Periksa kembali key kamu.");
         resetButton();
         return;
       }
 
-      let userData = null;
-      snapshot.forEach(doc => {
-        userData = doc.data();
-        userData.id = doc.id;
-      });
-
-      // Simpan status login
+      // Simpan session
       sessionStorage.setItem('isLoggedIn', 'true');
-      sessionStorage.setItem('userRole', userData.role || 'user');
-      sessionStorage.setItem('userId', userData.id);
+      sessionStorage.setItem('userRole', matchedData.role || 'user');
+      sessionStorage.setItem('userId', matchedData.id);
 
-      // Arahkan ke dashboard sesuai role
-      if (userData.role === 'admin') {
+      // Pengalihan halaman
+      if (matchedData.role === 'admin') {
         window.location.href = 'admin.html';
       } else {
         window.location.href = 'dashboard.html';
