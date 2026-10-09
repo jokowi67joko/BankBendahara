@@ -1,39 +1,164 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Bendahara 10¹ - Login</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Bendahara 10¹</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #0f1115;
+      color: #e6e8ec;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card {
+      background: #181b20;
+      border: 1px solid #2a2e37;
+      border-radius: 16px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .icon-container {
+      margin-bottom: 20px;
+      display: inline-flex;
+      padding: 14px;
+      background: #232832;
+      border-radius: 50%;
+      color: #7b8494;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: #7b8494;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #9aa1b0;
+      margin-bottom: 8px;
+    }
+
+    .input-group input {
+      width: 100%;
+      background: #0f1115;
+      border: 1px solid #2e3440;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: #4f5b66;
+    }
+
+    button#btnSubmit {
+      width: 100%;
+      background: #2e3440;
+      color: #ffffff;
+      border: 1px solid #3d4452;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button#btnSubmit:hover {
+      background: #3b4252;
+    }
+
+    button#btnSubmit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #errorMessage {
+      color: #ff6b6b;
+      margin-top: 14px;
+      font-size: 13px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="login-wrapper">
-        <div class="login-card">
-            <div class="icon-container">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 1L3 5v2h18V5L12 1zm-7 8v8h2V9H5zm5 0v8h2V9h-2zm5 0v8h2V9h-2zm-9 10v2h16v-2H6z"/>
-                </svg>
-            </div>
-            <h2>Bank Bendahara 10¹</h2>
-            <p>Silakan masukkan Access Key untuk masuk</p>
 
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="accessKey">Access Key / Password</label>
-                    <input type="password" id="accessKey" placeholder="Masukkan Access Key..." required autocomplete="current-password">
-                </div>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="icon-container">
+        <!-- Ikon Bank / Gedung -->
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 1L2 6v2h20V6L12 1zm-8 7v9h3V8H4zm6 0v9h3V8h-3zm6 0v9h3V8h-3zm-14 11v2h20v-2H2z"/>
+        </svg>
+      </div>
 
-                <button type="submit" id="btnSubmit">Masuk Sekarang</button>
-            </form>
-            <div id="errorMessage" style="color: #ff6b6b; margin-top: 15px; font-size: 14px; display: none;"></div>
+      <h2>Bank Bendahara 10¹</h2>
+      <p class="subtitle">Silakan masukkan Access Key untuk masuk</p>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="accessKey">Access Key / Password</label>
+          <input 
+            type="password" 
+            id="accessKey" 
+            placeholder="Masukkan Access Key..." 
+            autocomplete="current-password" 
+            required
+          >
         </div>
-    </div>
 
-    <!-- Firebase SDK (Modular atau Compat sesuaikan dengan config kamu) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    
-    <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
+        <button type="submit" id="btnSubmit">Masuk Sekarang</button>
+      </form>
+
+      <div id="errorMessage"></div>
+    </div>
+  </div>
+
+  <!-- Library Firebase Compat CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Script Aplikasi -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+
 </body>
 </html>
