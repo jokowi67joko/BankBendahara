@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSubmit.innerText = "Memverifikasi...";
 
     try {
-      // Ambil dokumen 'admin' langsung via Firestore REST API (Anti-Offline)
+      const apiKey = "AIzaSyBJA-HpHbU3-egRvAdcYdzTB_Bf9-mnjA";
       const projectId = "bankbendahara";
-      const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/akses/admin`;
+      const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/akses/admin?key=${apiKey}`;
       
       const response = await fetch(url);
       
@@ -26,19 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const doc = await response.json();
-
-      // Ekstrak data field dari REST API format
       const fields = doc.fields || {};
       const savedPassword = fields.password ? (fields.password.stringValue || "") : "";
       const role = fields.role ? (fields.role.stringValue || "user") : "user";
 
       if (savedPassword === inputKey) {
-        // Simpan sesi
         sessionStorage.setItem('isLoggedIn', 'true');
         sessionStorage.setItem('userRole', role);
         sessionStorage.setItem('userId', 'admin');
 
-        // Redirect sesuai role
         if (role === 'admin') {
           window.location.href = 'admin.html';
         } else {
