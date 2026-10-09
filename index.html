@@ -1,67 +1,39 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Bank Bendahara 10¹</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Bendahara 10¹ - Login</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="icon-container">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v2h18V5L12 1zm-7 8v8h2V9H5zm5 0v8h2V9h-2zm5 0v8h2V9h-2zm-9 10v2h16v-2H6z"/>
+                </svg>
+            </div>
+            <h2>Bank Bendahara 10¹</h2>
+            <p>Silakan masukkan Access Key untuk masuk</p>
 
-  <!-- Background Animasi Lingkaran Cahaya Lembut -->
-  <div class="bg-shape shape-1"></div>
-  <div class="bg-shape shape-2"></div>
-  <div class="bg-shape shape-3"></div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="accessKey">Access Key / Password</label>
+                    <input type="password" id="accessKey" placeholder="Masukkan Access Key..." required autocomplete="current-password">
+                </div>
 
-  <!-- Card Login Glassmorphism -->
-  <div class="login-wrapper">
-    <div class="login-card">
-      <div class="brand-header">
-        <div class="logo-badge">🏛️</div>
-        <h2>Bank Bendahara 10¹</h2>
-        <p>Silakan masuk menggunakan akun kas/admin</p>
-      </div>
-
-      <form id="login-form" autocomplete="off">
-        <div class="form-group">
-          <label for="email">Alamat Email</label>
-          <div class="input-icon-wrap">
-            <input 
-              type="email" 
-              id="email" 
-              placeholder="nama@contoh.com" 
-              required
-              autocomplete="email"
-            >
-          </div>
+                <button type="submit" id="btnSubmit">Masuk Sekarang</button>
+            </form>
+            <div id="errorMessage" style="color: #ff6b6b; margin-top: 15px; font-size: 14px; display: none;"></div>
         </div>
-
-        <div class="form-group">
-          <label for="password">Password / Admin Key</label>
-          <div class="input-icon-wrap">
-            <input 
-              type="password" 
-              id="password" 
-              placeholder="Masukkan password / key..." 
-              required
-              autocomplete="current-password"
-            >
-          </div>
-        </div>
-
-        <p id="error-msg" class="error-msg"></p>
-
-        <button type="submit" id="btn-submit" class="btn-login">
-          <span class="btn-text">Masuk Sekarang</span>
-          <span class="spinner" style="display: none;"></span>
-        </button>
-      </form>
     </div>
-  </div>
 
-  <script type="module" src="js/auth.js"></script>
+    <!-- Firebase SDK (Modular atau Compat sesuaikan dengan config kamu) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
