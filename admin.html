@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Bendahara</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>Panel Bendahara</h2>
+        <div>
+            <button id="btn-set-saldo">Set Saldo Awal</button>
+            <button id="btn-logout" class="danger">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h1 style="color: var(--success);">Saldo: <span id="total-saldo">Rp 0</span></h1>
+        </div>
+
+        <div class="card">
+            <h3>Tambah Anggota Baru</h3>
+            <form id="add-member-form" style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="text" id="member-name" placeholder="Nama Anggota" required>
+                <button type="submit">Tambah</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Kelola Pembayaran (Centang = Bayar Rp 2.000)</h3>
+            <div class="member-list" id="admin-member-list">
+                <!-- Render dari Firestore -->
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
