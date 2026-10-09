@@ -5,13 +5,16 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBJA-HphBU3-egRvAdcYdzTB_Bf9-mnjZY",
+  apiKey: "AIzaSyBJA-HpHbU3-egRvAdcYdzTB_Bf9-mnjA",
   authDomain: "bankbendahara.firebaseapp.com",
   projectId: "bankbendahara",
   storageBucket: "bankbendahara.firebasestorage.app",
   messagingSenderId: "87938401504",
-  appId: "1:87938401504:web:9da3e9ca0eaf1f6ad27c85"
+  appId: "1:87938401504:web:9da3e9ca0eaff16ad27c85"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Inisialisasi Firebase & Firestore
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
